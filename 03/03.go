@@ -29,6 +29,10 @@ func readFile(file string, lines *[]string) {
 	}
 }
 
+func convert(input string) (int64, error) {
+	return strconv.ParseInt(input, 2, 64)
+}
+
 func getMostCommonBitAtPos(lines []string, pos int, invert bool) int {
 	high := 1
 	low := 0
@@ -55,7 +59,7 @@ func getMostCommonBitAtPos(lines []string, pos int, invert bool) int {
 	}
 }
 
-func getRating(lines []string, width int, invert bool) []string {
+func getLifeSupportRating(lines []string, width int, invert bool) string {
 
 	pos := 0
 
@@ -80,46 +84,45 @@ func getRating(lines []string, width int, invert bool) []string {
 
 		lines = common
 		pos++
+	}
+
+	return strings.Join(lines, "")
+}
+
+func getPowerRating(lines []string, width int, invert bool) string {
+
+	pos := 0
+	var result []string
+	for pos < width {
+
+		bit := getMostCommonBitAtPos(lines, pos, invert)
+
+		if bit == 0 {
+			result = append(result, "0")
+		} else {
+			result = append(result, "1")
+		}
+		pos++
 
 	}
 
-	return lines
-
+	return strings.Join(result, "")
 }
 
 func main() {
 
 	var lines []string
-	var gamma []string
-	var epsilon []string
 
 	readFile("inputs.txt", &lines)
-
-	pos := 0
 	width := len(lines[0])
 
 	// Part 1
-	for pos < width {
-
-		bit := getMostCommonBitAtPos(lines, pos, false)
-
-		if bit == 0 {
-			gamma = append(gamma, "0")
-			epsilon = append(epsilon, "1")
-		} else {
-			gamma = append(gamma, "1")
-			epsilon = append(epsilon, "0")
-		}
-		pos++
-	}
-
-	gamma_decimal, _ := strconv.ParseInt(strings.Join(gamma, ""), 2, 64)
-	epsilon_decimal, _ := strconv.ParseInt(strings.Join(epsilon, ""), 2, 64)
-
-	fmt.Println(gamma_decimal * epsilon_decimal)
+	gammaRate, _ := convert(getPowerRating(lines, width, false))
+	epsilonRate, _ := convert(getPowerRating(lines, width, true))
+	fmt.Println("Power rating:", gammaRate*epsilonRate)
 
 	// Part 2
-	co2ScrubberRating_decimal, _ := strconv.ParseInt(strings.Join(getRating(lines, width, false), ""), 2, 64)
-	oxygenGeneratorRating_decimal, _ := strconv.ParseInt(strings.Join(getRating(lines, width, true), ""), 2, 64)
-	fmt.Println(oxygenGeneratorRating_decimal * co2ScrubberRating_decimal)
+	co2ScrubberRating, _ := convert(getLifeSupportRating(lines, width, false))
+	oxygenGeneratorRating, _ := convert(getLifeSupportRating(lines, width, true))
+	fmt.Println("Life support rating:", co2ScrubberRating*oxygenGeneratorRating)
 }
