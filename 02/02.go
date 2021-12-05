@@ -1,33 +1,11 @@
 package main
 
 import (
-	"bufio"
+	"advent-of-code/utils"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )
-
-func readFile(file string, lines *[]string) {
-
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer func() {
-		if err = f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		value := scanner.Text()
-		*lines = append(*lines, value)
-	}
-}
 
 func main() {
 
@@ -37,7 +15,7 @@ func main() {
 	var aim int
 	var result int
 
-	readFile("inputs.txt", &lines)
+	utils.Read("inputs.txt", &lines)
 
 	// Part 1
 	for _, line := range lines {

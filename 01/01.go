@@ -1,62 +1,40 @@
 package main
 
 import (
-	"bufio"
+	"advent-of-code/utils"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 )
-
-func readFile(file string, lines *[]int) {
-
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer func() {
-		if err = f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		value, _ := strconv.Atoi(scanner.Text())
-		*lines = append(*lines, value)
-	}
-}
-
-func sum(numbers []int) int {
-	var result int
-	for _, number := range numbers {
-		result += number
-	}
-	return result
-}
 
 func makeWindow(lines []int, windowSize int) [][]int {
 	var result [][]int
 	for i := 0; i < len(lines)-windowSize+1; i++ {
-		result = append(result, lines[i:i+windowSize])
+		res := lines[i : i+windowSize]
+		result = append(result, res)
 	}
 	return result
 }
 
 func main() {
 
-	var lines []int
+	var lines []string
+	var linesInt []int
 	var count int
 	var last int
 	var lastSum int
 	var windows [][]int
 
-	readFile("inputs.txt", &lines)
+	utils.Read("inputs.txt", &lines)
+
+	// convert to int
+	for _, line := range lines {
+		lineInt, _ := strconv.Atoi(line)
+		linesInt = append(linesInt, lineInt)
+	}
 
 	// Part 1
-	last = lines[0]
-	for _, line := range lines {
+	last = linesInt[0]
+	for _, line := range linesInt {
 		current := line
 		if current > last {
 			count++
@@ -69,11 +47,11 @@ func main() {
 
 	// Part 2
 	count = 0
-	windows = makeWindow(lines, 3)
-	lastSum, windows = sum(windows[0]), windows[1:]
+	windows = makeWindow(linesInt, 3)
+	lastSum, windows = utils.Sum(windows[0]), windows[1:]
 
 	for _, group := range windows {
-		currentSum := sum(group)
+		currentSum := utils.Sum(group)
 
 		if currentSum > lastSum {
 			count++

@@ -1,37 +1,11 @@
 package main
 
 import (
-	"bufio"
+	"advent-of-code/utils"
 	"fmt"
-	"log"
-	"os"
 	"strconv"
 	"strings"
 )
-
-func readFile(file string, lines *[]string) {
-
-	f, err := os.Open(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer func() {
-		if err = f.Close(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		value := scanner.Text()
-		*lines = append(*lines, value)
-	}
-}
-
-func convert(input string) (int64, error) {
-	return strconv.ParseInt(input, 2, 64)
-}
 
 func getMostCommonBitAtPos(lines []string, pos int, invert bool) int {
 	high := 1
@@ -110,19 +84,17 @@ func getPowerRating(lines []string, width int, invert bool) string {
 }
 
 func main() {
-
 	var lines []string
-
-	readFile("inputs.txt", &lines)
+	utils.Read("inputs.txt", &lines)
 	width := len(lines[0])
 
 	// Part 1
-	gammaRate, _ := convert(getPowerRating(lines, width, false))
-	epsilonRate, _ := convert(getPowerRating(lines, width, true))
+	gammaRate, _ := utils.Convert(getPowerRating(lines, width, false))
+	epsilonRate, _ := utils.Convert(getPowerRating(lines, width, true))
 	fmt.Println("Power rating:", gammaRate*epsilonRate)
 
 	// Part 2
-	co2ScrubberRating, _ := convert(getLifeSupportRating(lines, width, false))
-	oxygenGeneratorRating, _ := convert(getLifeSupportRating(lines, width, true))
+	co2ScrubberRating, _ := utils.Convert(getLifeSupportRating(lines, width, false))
+	oxygenGeneratorRating, _ := utils.Convert(getLifeSupportRating(lines, width, true))
 	fmt.Println("Life support rating:", co2ScrubberRating*oxygenGeneratorRating)
 }
