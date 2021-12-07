@@ -5,56 +5,40 @@ import (
 	"fmt"
 )
 
-func sumulateFishPopulationGrowth(fish []int, maxDays int) {
+func simulateFishPopulationGrowth(data []int, maxDays int) int {
 
-	currentDay := 1
+	maxDaysInCycle := 9
 
-	fishMap := make(map[int]int)
+	fish := make([]int, maxDaysInCycle)
 
-	for idx, f := range fish {
-		fishMap[idx] = f
+	for _, f := range data {
+		fish[f]++
 	}
 
-	for currentDay <= maxDays {
-
-		idx := 0
-		currentLength := len(fishMap)
-
-		for idx <= currentLength {
-
-			if _, ok := fishMap[idx]; ok {
-
-				if fishMap[idx] == 0 {
-
-					fishMap[idx] = 6
-
-					fishMap[len(fishMap)+1] = 8
-
-				} else {
-
-					fishMap[idx]--
-				}
-			}
-
-			idx++
-
+	for i := 0; i < maxDays; i++ {
+		count := make([]int, maxDaysInCycle)
+		for i := 1; i < maxDaysInCycle; i++ {
+			count[i-1] = fish[i]
 		}
-
-		currentDay++
+		count[6] += fish[0]
+		count[8] += fish[0]
+		fish = count
 	}
 
-	numberOfFish := len(fishMap)
+	numberOfFish := utils.Sum(fish)
 
 	fmt.Println("Number of fish after", maxDays, "days:", numberOfFish)
+	return numberOfFish
 }
 
 func main() {
 	lines := []string{}
-	utils.Read("inputs2.txt", &lines)
+	utils.Read("inputs.txt", &lines)
 
 	fish := utils.SplitStringToInt(lines[0], ",")
 
-	sumulateFishPopulationGrowth(fish, 18)
-	sumulateFishPopulationGrowth(fish, 256)
+	simulateFishPopulationGrowth(fish, 18)
+	simulateFishPopulationGrowth(fish, 80)
+	simulateFishPopulationGrowth(fish, 256)
 
 }
